@@ -63,31 +63,33 @@ export default function TradingInfo(props: Props) {
                         <Container fluid className="d-flex align-items-center">
                             <div className="justify-content-between m-lg-1">
                                 <div className="small text-black-50"><span style={{fontWeight: "bold"}}>Started deposit: </span>
-                                    {tradingData.baseDepositInBaseCurrency} {tradingData.baseCurrency}
+                                    {Number(tradingData.baseDepositInBaseCurrency).toFixed(2)} {tradingData.baseCurrency}
                                 </div>
                             </div>
                             <span style={{display: "block", width: "5px", marginRight: "5px", height: "12px", borderRight: "1px solid gray"}}></span>
                             <div className="justify-content-between m-lg-1">
                                 <div className="small text-black-50"><span style={{fontWeight: "bold"}}>
-                                    Current {tradingData.baseCurrency} balance: </span> {tradingData.currentDepositInBaseCurrency || 0}
+                                    Current {tradingData.baseCurrency} balance: </span>
+                                    {Number(tradingData.currentDepositInBaseCurrency).toFixed(2) || 0}
                                 </div>
                             </div>
                             <span style={{display: "block", width: "5px", marginRight: "5px", height: "12px", borderRight: "1px solid gray"}}></span>
                             <div className="justify-content-between m-lg-1">
                                 <div className="small text-black-50"><span style={{fontWeight: "bold"}}>
-                                    Current {tradingData.secondaryCurrency} balance: </span> {tradingData.currentDepositInSecondaryCurrency || 0}
+                                    Current {tradingData.secondaryCurrency} balance: </span>
+                                    {Number(tradingData.currentDepositInSecondaryCurrency).toFixed(2) || 0}
                                 </div>
                             </div>
                             <span style={{display: "block", width: "5px", marginRight: "5px", height: "12px", borderRight: "1px solid gray"}}></span>
                             <div className="justify-content-between m-lg-1">
                                 <div className="small text-black-50"><span style={{fontWeight: "bold"}}>ROI (%): </span>
-                                    {tradingData.roiInPercent || 0}
+                                    {Number(tradingData.roiInPercent).toFixed(4) || 0}
                                 </div>
                             </div>
                             <span style={{display: "block", width: "5px", marginRight: "5px", height: "12px", borderRight: "1px solid gray"}}></span>
                             <div className="justify-content-between m-lg-1">
                                 <div className="small text-black-50"><span style={{fontWeight: "bold"}}>ROI (USDT): </span>
-                                    {tradingData.roiInBaseCurrency ? `${tradingData.roiInBaseCurrency} ${tradingData.baseCurrency}` : 0}
+                                    {tradingData.roiInBaseCurrency ? `${Number(tradingData.roiInBaseCurrency).toFixed(2)} ${tradingData.baseCurrency}` : 0}
                                 </div>
                             </div>
                         </Container>

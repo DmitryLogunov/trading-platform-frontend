@@ -1,7 +1,11 @@
 import { Table } from 'react-bootstrap'
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import {PositionsModel} from "@models/positions.model";
 import PositionRow from "@components/app/TradingPane/PositionRow";
+import {Trading} from "@lib/graphql-api-client/types";
+import {TradingModel} from "@models/trading.model";
+import {GraphQLApiClient} from "@lib/graphql-api-client";
+import {Position} from "@lib/graphql-api-client/types/positions.types";
 
 type Props = {
   positions: PositionsModel[];
@@ -12,7 +16,8 @@ function handleDeletePosition(positionId: number) {
 }
 
 export default function PositionsList(props: Props) {
-  const { positions } = props
+  const { positionsList } = props
+
 
   return (
       <Table responsive bordered hover>
@@ -26,7 +31,7 @@ export default function PositionsList(props: Props) {
               </tr>
           </thead>
           <tbody>
-          {positions.map((position) => (
+          {positionsList.map((position) => (
               <tr key={position.id}>
                     <PositionRow position={position}/>
               </tr>

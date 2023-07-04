@@ -1,7 +1,8 @@
-import React from "react";
+import React, {useState} from "react";
 import {Card} from "react-bootstrap";
 
 import {Trading} from "@lib/graphql-api-client/types";
+import {GraphQLApiClient} from "@lib/graphql-api-client";
 
 export type NewOrderData = {
   datetime: string;
@@ -13,7 +14,15 @@ export type NewOrderData = {
 }
 
 export default function NewOrderForm(props: { tradingData: Trading, orderData: NewOrderData, setOrderData: (d: NewOrderData) => void }) {
-  const {tradingData, orderData, refreshOrderData} = props;
+  const {
+    tradingData,
+    orderData,
+    refreshOrderData,
+    currentOpenedPositionId,
+    setCurrentOpenedPositionId,
+    refreshPositionsList,
+    refreshTradingData,
+  } = props;
 
   const direction = orderData.action === 'buy' ?
     `${tradingData.baseCurrency} -> ${tradingData.secondaryCurrency}` :
@@ -22,15 +31,28 @@ export default function NewOrderForm(props: { tradingData: Trading, orderData: N
   const handleSubmit = async (event) => {
     event.preventDefault()
 
-    const data = {
-      baseCurrency: tradingData.baseCurrency,
-      secondaryCurrency: tradingData.secondaryCurrency,
-      action: event.target.action.value,
-      datetime: event.target.datetime.value,
-      price: event.target.price.value,
+    if (parseFloat(event.target.price.value) === 0) {
+      alert(`Price should no be equal 0`);
+      return;
     }
 
-    alert(`New order data: ${JSON.stringify(data)}`);
+    const gqlRequestName = event.target.action.value == `buy` ? `openPosition` : 'closePosition'
+    const data = event.target.action.value == `buy` ?
+      {
+        tradingId: tradingData.id,
+        baseCurrencyAmount: parseFloat(event.target.amount.value),
+        price: parseFloat(event.target.price.value),
+      } :
+      {
+        id: currentOpenedPositionId,
+        price: parseFloat(event.target.price.value),
+      }
+
+    const openedPosition = await GraphQLApiClient.sendRequest(gqlRequestName, data);
+    setCurrentOpenedPositionId(openedPosition.id)
+
+    await refreshPositionsList();
+    await refreshTradingData();
   }
 
   return (
@@ -52,33 +74,45 @@ export default function NewOrderForm(props: { tradingData: Trading, orderData: N
           <Card.Body>
             <div style={{height: "230px", marginTop: "-20px"}}>
               <form onSubmit={handleSubmit}>
-                <div className="form-group row py-1">
+                <div className="form-group row py-1" style={{height: "39px"}}>
                   <label className="col-sm-4 col-form-label">Action</label>
                   <div className="col-sm-8" style={{marginLeft: "-40px"}}>
                     <input type="text" className="form-control bg-light" id="action" value={orderData.action}
                            readOnly={true}/>
                   </div>
                 </div>
-                <div className="form-group row py-1">
+                <div className="form-group row py-1" style={{height: "39px"}}>
                   <label className="col-sm-4 col-form-label">Direction</label>
                   <div className="col-sm-8" style={{marginLeft: "-40px"}}>
                     <input type="text" className="form-control bg-light" id="direction" value={direction}
                            readOnly={true}/>
                   </div>
                 </div>
-                <div className="form-group row py-1">
+                <div className="form-group row py-1" style={{height: "39px"}}>
                   <label className="col-sm-4 col-form-label">Datetime</label>
                   <div className="col-sm-8" style={{marginLeft: "-40px"}}>
                     <input type="text" className="form-control" id="datetime" defaultValue={orderData.datetime}/>
                   </div>
                 </div>
-                <div className="form-group row py-1">
+                <div className="form-group row py-1" style={{height: "39px"}}>
+                  <label className="col-sm-4 col-form-label">Amount</label>
+                  <div className="col-sm-8" style={{marginLeft: "-40px"}}>
+                    <input type="text" className="form-control" id="amount" defaultValue={
+                      orderData.action === "buy" ? tradingData.currentDepositInBaseCurrency : tradingData.currentDepositInSecondaryCurrency
+                    } style={{width: "100px", float: "left"}}
+                    />
+                    <span style={{float: "left", width: "50px", margin: "10px", position: "relative", top: "-5px"}}>
+                      { orderData.action === "buy" ? tradingData.baseCurrency : tradingData.secondaryCurrency }
+                    </span>
+                  </div>
+                </div>
+                <div className="form-group row py-1" style={{height: "39px"}}>
                   <label className="col-sm-4 col-form-label">Price</label>
                   <div className="col-sm-8" style={{marginLeft: "-40px"}}>
                     <input type="text" className="form-control" id="price" defaultValue={orderData.price}/>
                   </div>
                 </div>
-                <div className="form-row py-3 text-center">
+                <div className="form-row py-3 text-center" style={{marginTop: "-9px"}}>
                   <button type="submit" className="btn btn-primary">Create</button>
                 </div>
               </form>

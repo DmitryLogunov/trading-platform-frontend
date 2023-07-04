@@ -27,6 +27,24 @@ const createTrading = gql`
     }
 `;
 
+const refreshTrading = gql`
+    mutation refreshTrading($id: String!) {
+        refreshTrading(id: $id) {
+            id
+            exchange
+            baseCurrency
+            secondaryCurrency
+            baseDepositInBaseCurrency
+            currentDepositInBaseCurrency
+            currentDepositInSecondaryCurrency
+            roiInPercent
+            roiInBaseCurrency
+            startedAt 
+            closedAt
+        }  
+    }
+`;
+
 const closeTrading = gql`
     mutation updateTrading(
             $id: String!,
@@ -64,6 +82,7 @@ const deleteTrading = gql`
 
 export default {
   createTrading,
+  refreshTrading,
   closeTrading,
   restartTrading,
   deleteTrading,

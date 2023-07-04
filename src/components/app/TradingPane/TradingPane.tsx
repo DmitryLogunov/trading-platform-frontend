@@ -20,6 +20,7 @@ import NewOrderForm, {NewOrderData} from "@components/app/TradingPane/NewOrderFo
 import {formatISODatetime} from "@lib/helpers";
 import {Trading} from "@lib/graphql-api-client/types";
 import {GraphQLApiClient} from "@lib/graphql-api-client";
+import {Position} from "@lib/graphql-api-client/types/positions.types";
 
 Chart.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, Tooltip, Filler)
 
@@ -31,15 +32,17 @@ type Props = {
 const random = (min: number, max: number) => Math.floor(Math.random() * (max - min + 1) + min);
 
 export default function TradingPane(props: Props) {
-  const { tradingId, chartData, positions } = props;
+  const { tradingId, chartData } = props;
 
   const [orderData, setOrderData] = useState({})
   const [tradingData, setTradingData] = useState({} as Trading);
+  const [currentOpenedPositionId, setCurrentOpenedPositionId] = useState(null)
+  const [positionsList, setPositionsList] = useState([])
   let isDataLoaded = false;
 
   const refreshTradingData = async (): Promise<Trading> => {
     return GraphQLApiClient.refreshData(
-      'getTradingByID',
+      'refreshTrading',
       setTradingData,
       (data: Trading) => !!data.id,
       undefined,
@@ -75,6 +78,39 @@ export default function TradingPane(props: Props) {
 
     setOrderData(refreshedOrderData);
   }
+
+  const refreshPositionsList = async () => {
+    const parsingPositionsHandler = (data: Position[]) => {
+      return data.map(p => ({
+        id: p.id,
+        ticker: `${p.secondaryCurrency}${p.baseCurrency}`,
+        openedAt: p.createdAt,
+        openedPrice: p.orders[0].price,
+        closedAt: p.closedAt || '',
+        closedPrice: p.orders[1]?.price || '',
+        roiInPercent: p.roiInPercent !== 0 ? p.roiInPercent : '',
+        roiInUSDT: p.roiInBaseCurrency !== 0 ? p.roiInBaseCurrency : ''
+      })) as PositionsModel[];
+    };
+
+    return GraphQLApiClient.refreshData(
+      'getPositions',
+      setPositionsList,
+      (data: Position[]) => Array.isArray(data) && data.length > 0,
+      parsingPositionsHandler,
+      { tradingId }
+    );
+  }
+
+  useEffect(() => {
+    if (isDataLoaded) return;
+    isDataLoaded = true;
+
+    (async () => {
+       const positions =  await refreshPositionsList();
+       setCurrentOpenedPositionId(positions[0].id);
+    })();
+  }, [tradingData]);
 
   return (
       <div>
@@ -166,13 +202,21 @@ export default function TradingPane(props: Props) {
               </div>
               <Card.Body>
                 <div style={{height: "200px", overflow: "hidden", overflowY: "scroll"}}>
-                  <PositionsList positions={positions || []}/>
+                  <PositionsList positionsList={positionsList}/>
                 </div>
               </Card.Body>
             </Card>
           </div>
 
-          <NewOrderForm tradingData={tradingData} orderData={orderData} refreshOrderData={refreshOrderData}/>
+          <NewOrderForm
+            tradingData={tradingData}
+            orderData={orderData}
+            currentOpenedPositionId={currentOpenedPositionId}
+            setCurrentOpenedPositionId={setCurrentOpenedPositionId}
+            refreshTradingData={refreshTradingData}
+            refreshOrderData={refreshOrderData}
+            refreshPositionsList={refreshPositionsList}
+          />
         </div>
       </div>
 

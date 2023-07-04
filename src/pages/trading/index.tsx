@@ -3,7 +3,6 @@ import {AdminLayout} from "@layout";
 import React from "react";
 import TradingPane from "../../components/app/TradingPane/TradingPane";
 import {chartData} from "../../mock-data/chart.data";
-import {positionsData} from "../../mock-data/positions.data";
 
 type Props = {
     id: string;
@@ -15,7 +14,6 @@ const Trading: NextPage<Props> = (props) => {
             <TradingPane
                 tradingId={props.id}
                 chartData={{...chartData}}
-                positions={...positionsData}
             />
         </AdminLayout>
     )

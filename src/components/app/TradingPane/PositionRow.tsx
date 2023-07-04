@@ -1,5 +1,6 @@
 import React from 'react'
 import {PositionsModel} from "@models/positions.model";
+import {formatISODatetime} from "@lib/helpers";
 
 type Props = {
   position: PositionsModel;
@@ -11,12 +12,12 @@ function handleDeletePosition(positionId: number) {
 
 export default function PositionRow(props: Props) {
   const { position } = props
-  const openingOrderInfo = `${position.openedAt} : ${position.openedPrice}`;
+  const openingOrderInfo = `${formatISODatetime(position.openedAt)} / ${Number(position.openedPrice).toFixed(5)}`;
   const closingOrderInfo = position.closedAt && position.closedAt !== ''?
-      `${position.closedAt} : ${position.openedPrice}` :
+      `${formatISODatetime(position.closedAt)} / ${Number(position.closedPrice).toFixed(5)}` :
       '';
-  const roiPercent = position.roiInPercent || '';
-  const roiUSDT = position.roiInUSDT || '';
+  const roiPercent = Number(position.roiInPercent).toFixed(3) || '';
+  const roiUSDT = Number(position.roiInUSDT).toFixed(2) || '';
 
   return (
     <>

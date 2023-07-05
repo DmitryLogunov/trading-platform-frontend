@@ -10,7 +10,7 @@ type Props = {
 export default function NewTradingForm(props: Props) {
     const { callback } = props;
 
-    const handleSubmit = async (event) => {
+    const handleSubmit = async (event: any) => {
         event.preventDefault()
 
         const data = {
@@ -27,6 +27,7 @@ export default function NewTradingForm(props: Props) {
     }
 
     const currentISODatetime = formatISODatetime(new Date().toISOString());
+
 
     return (
         <div>

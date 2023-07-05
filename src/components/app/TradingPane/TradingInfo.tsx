@@ -5,7 +5,7 @@ import {GraphQLApiClient} from "@lib/graphql-api-client";
 
 type Props = {
     tradingData: Trading;
-    refreshTradingData: () => Promise<void>;
+    refreshTradingData: () => Promise<Trading>;
 }
 
 export default function TradingInfo(props: Props) {

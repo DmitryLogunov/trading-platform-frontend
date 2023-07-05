@@ -1,5 +1,5 @@
 export interface PositionsModel {
-    id: number;
+    id: string;
     ticker: string;
     openedAt: string;
     openedPrice: number;

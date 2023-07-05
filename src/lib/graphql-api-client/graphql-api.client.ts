@@ -1,6 +1,11 @@
 import {GraphQLClient, gql} from 'graphql-request';
 import {queries, mutations} from "@lib/graphql-api-client/gql";
 
+if (!process.env.NEXT_PUBLIC_GRAPHQL_API_URL) {
+  console.log('Error: NEXT_PUBLIC_GRAPHQL_API_URL is undefined');
+  process.exit(1);
+}
+
 const client = new GraphQLClient(process.env.NEXT_PUBLIC_GRAPHQL_API_URL);
 
 export class GraphQLApiClient {
@@ -11,16 +16,16 @@ export class GraphQLApiClient {
    * @param params
    * @param gqlName
    */
-  static async sendRequest<I, O>(gqlRequestName: string, params?: I, gqlName?: string): Promise<O> {
+  static async sendRequest<I, O>(gqlRequestName: string, params?: I, gqlName?: string): Promise<O|undefined> {
     try {
-      const qglRequests = {...mutations, ...queries};
+      const qglRequests = {...mutations, ...queries} as  {[key: string]: string};
       if (!Object.keys(qglRequests).includes(gqlRequestName)) {
         throw new Error(`Unknown GraphQL request`)
       }
 
       const gqlRequest = qglRequests[gqlRequestName];
 
-      const response = await client.request(gqlRequest, (params || {}) as any);
+      const response = await client.request(gqlRequest, (params || {}) as any) as { [key: string]: O};
 
       return response[gqlName || gqlRequestName] as O;
     } catch (err) {
@@ -44,14 +49,14 @@ export class GraphQLApiClient {
     params?: unknown,
     gqlName?: string,
   ): Promise<P> {
-    const data: D = await GraphQLApiClient.sendRequest(gqlQuery, params || {}, gqlName) as D;
+    const data: unknown = await GraphQLApiClient.sendRequest(gqlQuery, params || {}, gqlName);
 
-    if (checkDataHandler && !checkDataHandler(data)) return;
+    if (checkDataHandler && !checkDataHandler(data as D)) return {} as P;
 
-    const parsedData = parsingDataHandler ? parsingDataHandler(data) : data;
+    const parsedData = parsingDataHandler ? parsingDataHandler(data as D) : data as P;
 
-    setData(parsedData);
+    setData(parsedData as P);
 
-    return parsedData;
+    return parsedData as P;
   }
 }

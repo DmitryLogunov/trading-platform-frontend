@@ -3,24 +3,37 @@ import {Card} from "react-bootstrap";
 
 import {Trading} from "@lib/graphql-api-client/types";
 import {GraphQLApiClient} from "@lib/graphql-api-client";
+import {formatISODatetime} from "@lib/helpers";
+import {PositionsModel} from "@models/positions.model";
+import {Position} from "@lib/graphql-api-client/types/positions.types";
 
 export type NewOrderData = {
   datetime: string;
   baseCurrency?: string;
   secondaryCurrency?: string;
-  action: 'buy' | 'sell';
+  action: string;
   amount: number;
   price: number;
 }
 
-export default function NewOrderForm(props: { tradingData: Trading, orderData: NewOrderData, setOrderData: (d: NewOrderData) => void }) {
+type Props = {
+  tradingData: Trading;
+  orderData: NewOrderData;
+  currentOpenedPositionId: string | null;
+  setCurrentOpenedPositionId: (id: string | null) => void;
+  refreshPositionsList: () => void;
+  refreshOrderData: () => void;
+  refreshTradingData: () => void;
+}
+
+export default function NewOrderForm(props: Props) {
   const {
     tradingData,
     orderData,
-    refreshOrderData,
     currentOpenedPositionId,
     setCurrentOpenedPositionId,
     refreshPositionsList,
+    refreshOrderData,
     refreshTradingData,
   } = props;
 
@@ -28,11 +41,11 @@ export default function NewOrderForm(props: { tradingData: Trading, orderData: N
     `${tradingData.baseCurrency} -> ${tradingData.secondaryCurrency}` :
     `${tradingData.secondaryCurrency} -> ${tradingData.baseCurrency}`;
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event: any) => {
     event.preventDefault()
 
     if (parseFloat(event.target.price.value) === 0) {
-      alert(`Price should no be equal 0`);
+      alert(`Price should not be equal 0`);
       return;
     }
 
@@ -48,8 +61,14 @@ export default function NewOrderForm(props: { tradingData: Trading, orderData: N
         price: parseFloat(event.target.price.value),
       }
 
-    const openedPosition = await GraphQLApiClient.sendRequest(gqlRequestName, data);
-    setCurrentOpenedPositionId(openedPosition.id)
+    const openedPosition: Position|undefined = await GraphQLApiClient.sendRequest(gqlRequestName, data);
+
+    if (openedPosition?.id && event.target.action.value == `buy`) {
+      setCurrentOpenedPositionId(openedPosition.id);
+    } else {
+      setCurrentOpenedPositionId(null);
+    }
+
 
     await refreshPositionsList();
     await refreshTradingData();
@@ -91,7 +110,7 @@ export default function NewOrderForm(props: { tradingData: Trading, orderData: N
                 <div className="form-group row py-1" style={{height: "39px"}}>
                   <label className="col-sm-4 col-form-label">Datetime</label>
                   <div className="col-sm-8" style={{marginLeft: "-40px"}}>
-                    <input type="text" className="form-control" id="datetime" defaultValue={orderData.datetime}/>
+                    <input type="text" className="form-control" id="datetime" defaultValue={formatISODatetime(orderData.datetime).replace('Z', '')}/>
                   </div>
                 </div>
                 <div className="form-group row py-1" style={{height: "39px"}}>

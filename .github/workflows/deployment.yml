@@ -22,5 +22,7 @@ jobs:
             git pull
             docker build -t trading-platform-frontend .
             cd /home/projects/infra
-            export $(cat /home/projects/infra/env-files/trading-platform-backend/master/.env) && docker-compose restart
+            ids=$(docker ps --all | grep frontend | awk '{ print $1 }')
+            docker stop $ids && docker rm $ids
+            export $(cat /home/projects/infra/env-files/trading-platform-backend/master/.env) && docker-compose up -d
 

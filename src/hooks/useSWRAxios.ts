@@ -1,9 +1,6 @@
 import useSWR from 'swr'
 import axios, {
-  AxiosError,
-  AxiosRequestConfig,
-  AxiosResponse,
-  AxiosResponseTransformer,
+  AxiosError, AxiosRequestConfig, AxiosResponse, AxiosResponseTransformer,
 } from 'axios'
 
 type AtLeast<T, K extends keyof T> = & Pick<T, K> & Partial<T>

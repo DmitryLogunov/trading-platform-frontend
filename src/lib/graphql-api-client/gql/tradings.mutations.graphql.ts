@@ -1,4 +1,5 @@
-import {gql} from 'graphql-request';
+/* eslint-disable */
+import { gql } from 'graphql-request'
 
 const createTrading = gql`
     mutation createTrading(
@@ -25,7 +26,7 @@ const createTrading = gql`
             startedAt  
         }
     }
-`;
+`
 
 const refreshTrading = gql`
     mutation refreshTrading($id: String!) {
@@ -43,7 +44,7 @@ const refreshTrading = gql`
             closedAt
         }  
     }
-`;
+`
 
 const closeTrading = gql`
     mutation updateTrading(
@@ -59,7 +60,7 @@ const closeTrading = gql`
             id  
         }
     }
-`;
+`
 
 const restartTrading = gql`
     mutation updateTrading($id: String!){
@@ -72,13 +73,13 @@ const restartTrading = gql`
             id  
         }
     }
-`;
+`
 
 const deleteTrading = gql`
     mutation deleteTrading($id: String!) {
         deleteTrading(id: $id)   
     }
-`;
+`
 
 export default {
   createTrading,

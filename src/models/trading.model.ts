@@ -1,5 +1,5 @@
 export interface TradingModel {
-  id: number;
+  id: string;
   baseCurrency: string;
   secondaryCurrency: string;
   ticker: string;

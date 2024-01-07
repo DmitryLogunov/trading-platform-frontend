@@ -1,4 +1,5 @@
-import {gql} from 'graphql-request';
+/* eslint-disable */
+import { gql } from 'graphql-request'
 
 const getTradings = gql`
     query {
@@ -16,7 +17,7 @@ const getTradings = gql`
             closedAt
         }
     }
-`;
+`
 
 const getTradingByID = gql`
     query getTradingByID($id: String!){
@@ -34,7 +35,7 @@ const getTradingByID = gql`
             closedAt
         }
     }
-`;
+`
 
 export default {
   getTradings,

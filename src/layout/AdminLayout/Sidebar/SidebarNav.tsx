@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { IconDefinition } from '@fortawesome/free-regular-svg-icons'
-import { faGauge, faCode } from '@fortawesome/free-solid-svg-icons'
+import { faGauge } from '@fortawesome/free-solid-svg-icons'
 import React, { PropsWithChildren } from 'react'
 import { Nav } from 'react-bootstrap'
 import Link from 'next/link'
@@ -35,6 +35,12 @@ export default function SidebarNav() {
     <ul className="list-unstyled">
       <SidebarNavItem icon={faGauge} href="/tradings-list">
         Tradings
+      </SidebarNavItem>
+      <SidebarNavItem icon={faGauge} href="/signals">
+        Signals
+      </SidebarNavItem>
+      <SidebarNavItem icon={faGauge} href="/charts">
+        Charts
       </SidebarNavItem>
     </ul>
   )

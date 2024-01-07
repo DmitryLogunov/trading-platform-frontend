@@ -1,4 +1,5 @@
-import {gql} from 'graphql-request';
+/* eslint-disable */
+import { gql } from 'graphql-request'
 
 const openPosition = gql`
     mutation openPosition($tradingId: String!, $baseCurrencyAmount: Float!, $price: Float!) {
@@ -24,7 +25,7 @@ const openPosition = gql`
            closedAt
         }
     }
-`;
+`
 
 const closePosition = gql`
     mutation closePosition($id: String!, $price: Float!) {
@@ -49,7 +50,7 @@ const closePosition = gql`
            closedAt
         }
     }
-`;
+`
 
 export default {
   openPosition,

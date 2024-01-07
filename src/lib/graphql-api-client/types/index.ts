@@ -1,1 +1,1 @@
-export * from './tradings.types';
+export * from './tradings.types'

@@ -1,4 +1,5 @@
-import {gql} from 'graphql-request';
+/* eslint-disable */
+import { gql } from 'graphql-request'
 
 const getAlerts = gql`
     query getAlerts($ticker: String!, $createdAtFrom: String!) {
@@ -16,7 +17,7 @@ const getAlerts = gql`
             createdAt
         }
     }
-`;
+`
 
 export default {
   getAlerts,

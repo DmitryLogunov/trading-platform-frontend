@@ -30,4 +30,4 @@ jobs:
           port: ${{ secrets.PORT }}
           script: |
               cd /home/projects/infra
-              export $(cat /home/projects/infra/env-files/trading-platform-backend/master/.env) && docker-compose up -d
+              export $(cat /home/projects/infra/env-files/trading-platform-backend/master/.env) && docker-compose restart

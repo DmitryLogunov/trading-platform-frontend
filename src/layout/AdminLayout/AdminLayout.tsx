@@ -61,7 +61,7 @@ export default function AdminLayout({ children }: PropsWithChildren) {
             {children}
           </div>
         </div>
-        <Footer/>
+        <Footer />
       </div>
 
       <SidebarOverlay isShowSidebar={isShowSidebar} toggleSidebar={toggleIsShowSidebar} />

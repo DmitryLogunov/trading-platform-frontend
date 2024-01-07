@@ -1,14 +1,7 @@
 import type { NextPage } from 'next'
 import { AdminLayout } from '@layout'
 import {
-  BarElement,
-  CategoryScale,
-  Chart,
-  Filler,
-  LinearScale,
-  LineElement,
-  PointElement,
-  Tooltip,
+  BarElement, CategoryScale, Chart, Filler, LinearScale, LineElement, PointElement, Tooltip,
 } from 'chart.js'
 import React from 'react'
 
@@ -16,8 +9,8 @@ Chart.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement
 
 const Home: NextPage = () => (
   <AdminLayout>
-    {/*<TradingsList>*/}
-    {/*</TradingsList>*/}
+    {/* <TradingsList> */}
+    {/* </TradingsList> */}
   </AdminLayout>
 )
 

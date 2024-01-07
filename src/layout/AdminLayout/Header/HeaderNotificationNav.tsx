@@ -83,7 +83,9 @@ export default function HeaderNotificationNav() {
 
             <Link href="#" passHref legacyBehavior>
               <Dropdown.Item>
-                <small><div className="text-uppercase"><b>CPU Usage</b></div></small>
+                <small>
+                  <div className="text-uppercase"><b>CPU Usage</b></div>
+                </small>
                 <ProgressBar
                   className="progress-thin mt-2"
                   variant="primary"
@@ -96,7 +98,9 @@ export default function HeaderNotificationNav() {
             </Link>
             <Link href="#" passHref legacyBehavior>
               <Dropdown.Item>
-                <small><div className="text-uppercase"><b>Memory Usage</b></div></small>
+                <small>
+                  <div className="text-uppercase"><b>Memory Usage</b></div>
+                </small>
                 <ProgressBar
                   className="progress-thin mt-2"
                   variant="warning"
@@ -109,7 +113,9 @@ export default function HeaderNotificationNav() {
             </Link>
             <Link href="#" passHref legacyBehavior>
               <Dropdown.Item>
-                <small><div className="text-uppercase"><b>SSD 1 Usage</b></div></small>
+                <small>
+                  <div className="text-uppercase"><b>SSD 1 Usage</b></div>
+                </small>
                 <ProgressBar
                   className="progress-thin mt-2"
                   variant="danger"

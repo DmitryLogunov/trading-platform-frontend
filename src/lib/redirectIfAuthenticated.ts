@@ -3,11 +3,10 @@ import { GetServerSideProps } from 'next'
 import { ParsedUrlQuery } from 'querystring'
 import { PreviewData } from 'next/types'
 
-type RedirectIfAuthenticated = <
-  P extends { [key: string]: unknown } = { [key: string]: unknown },
+type RedirectIfAuthenticated = <P extends { [key: string]: unknown } = { [key: string]: unknown },
   Q extends ParsedUrlQuery = ParsedUrlQuery,
   D extends PreviewData = PreviewData,
->(
+  >(
   gssp: GetServerSideProps<P, Q, D>
 ) => GetServerSideProps<P, Q, D>
 
